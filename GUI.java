@@ -32,38 +32,13 @@ public class GUI {
 	public JTextField textField;
 	private static String imgurURLPrefix = "http://imgur.com/a/";
 	private static String http = "http";
+        private static String downloadList = "http://www.jrobcomputers.com/downloads/walls.txt";
 	MyThread worker = new MyThread();
 	private ArrayList<String> dPages = new ArrayList<String>();
+        private ArrayList<String> galleriesList = new ArrayList<String>();
+        String[] galleries;
+        
 	
-	String[] galleries ={
-						"http://imgur.com/r/wallpaper",
-						"http://imgur.com/r/wallpapers",
-						"wCBYO", 
-						"x6sRL",
-						"UtTug",
-						"Pd50T",
-						"cSHht",
-						"bxuoB",
-						"atexU",
-						"rdOxc",
-						"UFMym",
-						"D3vya",
-						"CYLB5",
-						"9ITy3",
-						"GAx1r",
-						"wBYOE",
-						"Faz7d",
-						"GCVlJ",
-						"OKaDx",
-						"chSms",
-						"catwP",
-						"U3PyN",
-						"RvFYM",
-						"dbELn",
-						"6EPQG",
-						"J2VG8",
-						"ZETXp"
-						};
 	String userSelection = "user";
 	String definedSelection = "defined";
 	String selection;
@@ -72,7 +47,36 @@ public class GUI {
 	JCheckBox chkbox;
 
 	public GUI(){
-		//text input for url
+                //Get the gallery list from the server
+                InputStream is = null;
+                try{
+                    is = new URL(downloadList).openStream();
+                }catch(MalformedURLException e){
+                    //it's not malformed
+                }catch(IOException e){
+                    //well if it breaks idk
+                }
+                
+                Scanner pageScanner = new Scanner(is, "UTF-8");
+                String page = pageScanner.useDelimiter("\\A").next();
+                try{
+                    is.close();
+                }catch(IOException e){
+                    //hope it's open lol
+                }
+                pageScanner.close();
+                
+                //Extract individual galleries
+		Scanner input = new Scanner(page);
+                String line;
+                while(input.hasNext()){
+                    line=input.nextLine().trim();
+                    galleriesList.add(line);
+                }
+                
+                galleries = galleriesList.toArray(new String[galleriesList.size()]);
+                
+                //text input for url
 		textField = new JTextField(40);
 		//combobox
 		cb = new JComboBox<Object>(galleries);
