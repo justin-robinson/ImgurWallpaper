@@ -168,12 +168,13 @@ public class GUI {
 	}
 
     public void print(String message ) {
+		System.out.print(message);
         this.gui.output.append(message);
         this.gui.output.setCaretPosition(this.gui.output.getDocument().getLength());
     }
 
     public void println(String message ) {
-        message += "\n";
+        message += System.lineSeparator();
         this.print(message);
     }
 
