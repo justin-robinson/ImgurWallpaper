@@ -72,10 +72,9 @@ public class Downloader {
         //Get the gallery list from the server
         InputStream inputStream = null;
         try{
-            inputStream = new URL(DOWNLOAD_LIST_URL).openStream();
-        }catch(MalformedURLException e){
-            Main.gui.println(e.getMessage());
-        }catch(IOException e){
+            URL url = new URL(DOWNLOAD_LIST_URL);
+            inputStream = url.openStream();
+        }catch ( Exception e ) {
             Main.gui.println(e.getMessage());
         }
 
