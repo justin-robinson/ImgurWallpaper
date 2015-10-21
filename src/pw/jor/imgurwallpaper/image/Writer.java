@@ -1,6 +1,7 @@
 package pw.jor.imgurwallpaper.image;
 
 import pw.jor.imgurwallpaper.Downloader;
+import pw.jor.imgurwallpaper.Main;
 import pw.jor.imgurwallpaper.gui.GUI;
 
 import javax.imageio.ImageIO;
@@ -18,11 +19,11 @@ public class Writer {
     private static String outputFolder = null;
     public static String FILE_FORMAT = "jpg";
 
-    public static void writeFiles ( ArrayList<String> imageHashes, GUI gui ) {
+    public static void writeFiles ( ArrayList<String> imageHashes ) {
 
         // write all images to file
         if(imageHashes.size() > 0){
-            gui.println(imageHashes.size() + " images found!");
+            Main.gui.println(imageHashes.size() + " images found!");
             File file;
             BufferedImage bufferedImage;
             FileOutputStream writer;
@@ -30,10 +31,10 @@ public class Writer {
             int imageNumber = 1;
 
             int width, height,
-                    minWidth = (int)gui.minWidth.getValue(),
-                    minHeight = (int)gui.minHeight.getValue(),
-                    maxWidth = (int)gui.maxWidth.getValue() == 0 ? Integer.MAX_VALUE : (int)gui.maxWidth.getValue(),
-                    maxHeight = (int)gui.maxHeight.getValue() == 0 ? Integer.MAX_VALUE : (int)gui.maxHeight.getValue();
+                    minWidth = (int)Main.gui.minWidth.getValue(),
+                    minHeight = (int)Main.gui.minHeight.getValue(),
+                    maxWidth = (int)Main.gui.maxWidth.getValue() == 0 ? Integer.MAX_VALUE : (int)Main.gui.maxWidth.getValue(),
+                    maxHeight = (int)Main.gui.maxHeight.getValue() == 0 ? Integer.MAX_VALUE : (int)Main.gui.maxHeight.getValue();
 
             for( String fileName : imageHashes ){
                 fileName += "." + FILE_FORMAT;
@@ -41,7 +42,7 @@ public class Writer {
                 file=new File(filePath);
                 if(!file.exists()){
 
-                    bufferedImage = Downloader.getImage("http://i.imgur.com/"+fileName, gui);
+                    bufferedImage = Downloader.getImage("http://i.imgur.com/"+fileName);
                     width = bufferedImage.getWidth();
                     height = bufferedImage.getHeight();
 
@@ -52,7 +53,7 @@ public class Writer {
 
                             writer=new FileOutputStream(filePath);
 
-                            gui.println(imageNumber + ". Downloading " + fileName);
+                            Main.gui.println(imageNumber + ". Downloading " + fileName);
 
                             try {
                                 ImageIO.write(
@@ -60,23 +61,23 @@ public class Writer {
                                         FILE_FORMAT,
                                         file);
                             } catch ( IOException e ) {
-                                gui.println("Error reading or writing image: " + file.getName());
+                                Main.gui.println("Error reading or writing image: " + file.getName());
                             }
 
                             try {
                                 writer.close();
                             } catch ( IOException e ) {
-                                gui.println("Error closing reader or writer");
+                                Main.gui.println("Error closing reader or writer");
                             }
                         } catch (FileNotFoundException e) {
-                            gui.println("Can't open file for writing");
+                            Main.gui.println("Can't open file for writing");
                         }
                     } else {
-                        gui.println(imageNumber + ". " + fileName + " does not meet min/max dimensions");
+                        Main.gui.println(imageNumber + ". " + fileName + " does not meet min/max dimensions");
                     }
                 }
                 else{
-                    gui.println(imageNumber + ". " + fileName + " already exists");
+                    Main.gui.println(imageNumber + ". " + fileName + " already exists");
                 }
 
                 imageNumber++;
@@ -84,7 +85,7 @@ public class Writer {
         }
         else{
             //System.out.println("No valid images found");
-            gui.println("No valid images found");
+            Main.gui.println("No valid images found");
         }
     }
 
