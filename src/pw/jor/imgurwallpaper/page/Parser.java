@@ -1,5 +1,6 @@
 package pw.jor.imgurwallpaper.page;
 
+import pw.jor.imgurwallpaper.Main;
 import pw.jor.imgurwallpaper.gui.GUI;
 
 import java.io.InputStream;
@@ -16,18 +17,16 @@ public class Parser {
     public static final String ID="id=\"";
 
     private String page="";
-    private GUI gui;
 
-    public Parser ( String page, GUI gui ) {
+    public Parser ( String page ) {
         this.page = page;
-        this.gui = gui;
     }
 
     public ArrayList<String> searchPage() {
         ArrayList<String> ImageHashes = new ArrayList<String>();
 
         if ( !page.equals("") ) {
-            gui.println("Getting Page...");
+            Main.gui.println("Getting Page...");
             String line="",s;
             int begin=0, end, index;
             Scanner input = new Scanner(page);

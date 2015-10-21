@@ -1,6 +1,7 @@
 package pw.jor.imgurwallpaper.gui;
 
 import pw.jor.imgurwallpaper.Downloader;
+import pw.jor.imgurwallpaper.Main;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -31,9 +32,7 @@ public class GUI {
     public static final String USER_SELECTION = "user";
     public static final String DEFINED_SELECTION = "defined";
 
-    private GUI gui = this;
-
-    private Worker worker = new Worker(gui);
+    private Worker worker = new Worker();
 
 	public GUI(){
 
@@ -74,7 +73,7 @@ public class GUI {
 			public void actionPerformed(ActionEvent e){
 				if(worker.isAlive())
 					worker.stop();
-				worker =  new Worker(gui);
+				worker =  new Worker();
 				worker.start();}});
 		JButton pause = new JButton("Pause");
 		pause.addActionListener(new ActionListener() {
@@ -169,8 +168,8 @@ public class GUI {
 
     public void print(String message ) {
 		System.out.print(message);
-        this.gui.output.append(message);
-        this.gui.output.setCaretPosition(this.gui.output.getDocument().getLength());
+        Main.gui.output.append(message);
+        Main.gui.output.setCaretPosition(Main.gui.output.getDocument().getLength());
     }
 
     public void println(String message ) {

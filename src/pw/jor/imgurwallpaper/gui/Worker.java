@@ -1,6 +1,7 @@
 package pw.jor.imgurwallpaper.gui;
 
 import pw.jor.imgurwallpaper.Downloader;
+import pw.jor.imgurwallpaper.Main;
 import pw.jor.imgurwallpaper.page.Parser;
 import pw.jor.imgurwallpaper.image.Writer;
 
@@ -13,14 +14,8 @@ public class Worker extends Thread {
     public static final String HTTP = "http";
     public static final String IMGUR_URL_PREFIX = "http://imgur.com/a/";
 
-    private GUI gui;
-
-    public Worker(GUI gui) {
-        this.gui = gui;
-    }
-
     public void main(String[] args) {
-        Worker worker = new Worker(gui);
+        Worker worker = new Worker();
         worker.setDaemon(true);
         worker.start();
     }
@@ -30,7 +25,7 @@ public class Worker extends Thread {
         String url = "";
 
         // user defined or pre populated url?
-        gui.selection = gui.radios.getSelection().getActionCommand();
+        Main.gui.selection = Main.gui.radios.getSelection().getActionCommand();
 
         // what url are we using?
         int selectedURLIndex=0;
@@ -40,15 +35,15 @@ public class Worker extends Thread {
             url= getSelectedURL(selectedURLIndex++);
 
             // get page contents
-            String page = Downloader.getPageContents(url, gui);
+            String page = Downloader.getPageContents(url);
 
             // parse page for image hashes
-            Parser parser = new Parser(page, gui);
+            Parser parser = new Parser(page);
 
             // write hashes to file
-            Writer.writeFiles(parser.searchPage(), gui);
+            Writer.writeFiles(parser.searchPage());
 
-        } while(gui.downloadAllCheckBox.isSelected() && selectedURLIndex < gui.galleries.length);
+        } while(Main.gui.downloadAllCheckBox.isSelected() && selectedURLIndex < Main.gui.galleries.length);
 
     }
 
@@ -57,16 +52,16 @@ public class Worker extends Thread {
         String url = "";
 
         // download all urls checked?
-        if(gui.downloadAllCheckBox.isSelected()){
-            url = gui.galleries[selection];
+        if(Main.gui.downloadAllCheckBox.isSelected()){
+            url = Main.gui.galleries[selection];
         }
         // user input url?
-        else if(gui.selection.equals(gui.USER_SELECTION)){
-            url = gui.textField.getText();
+        else if(Main.gui.selection.equals(Main.gui.USER_SELECTION)){
+            url = Main.gui.textField.getText();
         }
         // prepopulated url?
-        else if(gui.selection.equals(gui.DEFINED_SELECTION)){
-            url = gui.galleries[gui.comboBox.getSelectedIndex()];
+        else if(Main.gui.selection.equals(Main.gui.DEFINED_SELECTION)){
+            url = Main.gui.galleries[Main.gui.comboBox.getSelectedIndex()];
         }
 
         // if url is just a hash, prepend the imgur url

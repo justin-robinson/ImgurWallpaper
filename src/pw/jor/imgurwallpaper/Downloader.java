@@ -22,19 +22,18 @@ public class Downloader {
     /**
      * gets the contents of a url
      * @param url
-     * @param gui
      * @return
      */
-    public static String getPageContents ( String url, GUI gui ) {
+    public static String getPageContents ( String url ) {
         String page="";
         try{
             page = new Scanner(new URL(url).openStream(), "UTF-8").useDelimiter("\\A").next();
         }catch (MalformedURLException e){
-            gui.println("URL is invalid");
+            Main.gui.println("URL is invalid");
         }catch(IOException e){
-            gui.println("404 Page Not Found");
+            Main.gui.println("404 Page Not Found");
         }catch(IllegalArgumentException e){
-            gui.println("URL is invalid");
+            Main.gui.println("URL is invalid");
         }
 
         return page;
@@ -43,10 +42,9 @@ public class Downloader {
     /**
      * Buffers url into image
      * @param urlString
-     * @param gui
      * @return
      */
-    public static BufferedImage getImage ( String urlString, GUI gui ) {
+    public static BufferedImage getImage ( String urlString ) {
 
         BufferedImage bufferedImage = null;
 
@@ -54,9 +52,9 @@ public class Downloader {
             URL url = new URL(urlString);
             bufferedImage = ImageIO.read(url);
         } catch ( MalformedURLException e ) {
-            gui.println("URL is invalid");
+            Main.gui.println("URL is invalid");
         } catch ( IOException e ) {
-            gui.println("404 page not found");
+            Main.gui.println("404 page not found");
         }
 
         return bufferedImage;
@@ -76,9 +74,9 @@ public class Downloader {
         try{
             inputStream = new URL(DOWNLOAD_LIST_URL).openStream();
         }catch(MalformedURLException e){
-            //it's not malformed
+            Main.gui.println(e.getMessage());
         }catch(IOException e){
-            //well if it breaks idk
+            Main.gui.println(e.getMessage());
         }
 
         Scanner pageScanner = new Scanner(inputStream, "UTF-8");
