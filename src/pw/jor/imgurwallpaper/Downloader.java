@@ -17,7 +17,7 @@ import java.net.URL;
  */
 public class Downloader {
 
-    private static final String DOWNLOAD_LIST_URL = "https://jor.pw/downloads/walls.txt";
+    private static final String DOWNLOAD_LIST_URL = "https://drive.google.com/uc?export=download&id=0B72B1Sn-24fwT21DQW9fUjJacU0";
 
     /**
      * gets the contents of a url
