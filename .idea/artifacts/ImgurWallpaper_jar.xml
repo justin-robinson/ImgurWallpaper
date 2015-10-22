@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="ImgurWallpaper:jar">
+    <output-path>/zebra</output-path>
+    <root id="archive" name="ImgurWallpaper.jar">
+      <element id="module-output" name="ImgurWallpaper" />
+    </root>
+  </artifact>
+</component>
