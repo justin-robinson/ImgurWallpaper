@@ -17,7 +17,7 @@ import java.net.URL;
  */
 public class Downloader {
 
-    private static final String DOWNLOAD_LIST_URL = "https://drive.google.com/uc?export=download&id=0B72B1Sn-24fwT21DQW9fUjJacU0";
+    private static final String DOWNLOAD_LIST_URL = "https://jor.pw/downloads/walls.txt";
 
     /**
      * gets the contents of a url
@@ -65,26 +65,23 @@ public class Downloader {
      * Gets list of urls and hashes to prepopulate ui with
      * @return
      */
-    public static String[] getSourceURLs () {
+    public static String[] getSourceURLs () throws Exception{
 
         ArrayList<String> galleriesList = new ArrayList<String>();
 
         //Get the gallery list from the server
         InputStream inputStream = null;
-        try{
-            URL url = new URL(DOWNLOAD_LIST_URL);
-            inputStream = url.openStream();
-        }catch ( Exception e ) {
-            Main.gui.println(e.getMessage());
-        }
 
+        // get text file
+        URL url = new URL(DOWNLOAD_LIST_URL);
+        inputStream = url.openStream();
+
+        // create scanner
         Scanner pageScanner = new Scanner(inputStream, "UTF-8");
         String page = pageScanner.useDelimiter("\\A").next();
-        try{
-            inputStream.close();
-        }catch(IOException e){
-            //hope it's open lol
-        }
+
+        // close connections
+        inputStream.close();
         pageScanner.close();
 
         //Extract individual galleries
