@@ -1,5 +1,6 @@
 ImgurWallpaper
 ==============
+Downloads wallpapers from imgur galleris in bulk
 
 ##Build
 
