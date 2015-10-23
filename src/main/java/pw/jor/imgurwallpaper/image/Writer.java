@@ -1,5 +1,6 @@
 package pw.jor.imgurwallpaper.image;
 
+import pw.jor.environment.User;
 import pw.jor.imgurwallpaper.Downloader;
 import pw.jor.imgurwallpaper.Main;
 
@@ -88,20 +89,7 @@ public class Writer {
     private static String getOutputFolder () {
 
         if ( outputFolder == null ){
-            // get user's home folder
-            String userDir = System.getenv("USERPROFILE") == null
-                    ? System.getenv("HOME")
-                    : System.getenv("USERPROFILE");
-
-            // append subfolders
-            Path outputPath = Paths.get(userDir, "Pictures", "Wallpapers");
-
-            // get path string
-            outputFolder = outputPath.toString();
-
-            // make folders
-            File dir = new File(outputFolder);
-            dir.mkdir();
+            outputFolder = User.getUserPicturesFolder().toString();
 
         }
 
