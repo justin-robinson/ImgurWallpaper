@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public abstract class ParserAbstract {
 
-    protected ArrayList<String> ImageHashes;
+    private ArrayList<String> ImageHashes;
 
     public ParserAbstract ( ) {
         this.ImageHashes = new ArrayList<>();

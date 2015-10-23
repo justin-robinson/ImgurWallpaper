@@ -78,7 +78,7 @@ public class Worker extends Thread {
 
         // if url is just a hash, create the imgur url
         url = isURL(hash)
-                ? hash
+                ? hash + "/new/page/1/hit?scrolled"
                 : galleryHashToURL(hash);
 
         return url;
