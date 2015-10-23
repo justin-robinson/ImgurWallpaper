@@ -33,6 +33,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.4'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'org.apache.commons:commons-lang3:3.0'
+    compile 'net.java.dev.jna:platform:3.5.2'
 
 
     // Declare the dependency for your favourite test framework you want to use in your tests.
