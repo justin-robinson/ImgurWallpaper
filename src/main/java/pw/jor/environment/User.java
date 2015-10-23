@@ -32,7 +32,7 @@ public class User {
 
             pictureVariable = Variable.expand(pictureVariable);
 
-            picturePath = Paths.get(pictureVariable);
+            picturePath = Paths.get(pictureVariable, "Wallpapers");
 
         } else {
             picturePath = Paths.get(SystemUtils.USER_HOME, "Pictures", "Wallpapers");
