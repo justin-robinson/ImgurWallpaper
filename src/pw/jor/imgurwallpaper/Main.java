@@ -10,7 +10,5 @@ public class Main {
 
         // and aWAY we GO!!!
         gui = new GUI();
-
-        gui.show();
     }
 }
