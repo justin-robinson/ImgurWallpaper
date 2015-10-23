@@ -1,4 +1,5 @@
 build
+.idea
 *.iml
 *.ipr
 *.iws
