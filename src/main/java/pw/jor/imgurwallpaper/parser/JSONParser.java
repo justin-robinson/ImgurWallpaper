@@ -26,7 +26,7 @@ public class JSONParser extends ParserAbstract {
 
         for ( Image image : hit.getImages() ) {
             if ( Constraint.isRightSize(image.width, image.height) ) {
-                ImageHashes.add(image.hash);
+                addHash(image.hash);
             }
         }
 

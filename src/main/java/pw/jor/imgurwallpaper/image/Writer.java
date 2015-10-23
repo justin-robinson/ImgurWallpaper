@@ -31,7 +31,7 @@ public class Writer {
 
             int width, height;
 
-            for( String fileName : imageHashes ){
+            for( String fileName : imageHashes ) {
                 fileName += "." + FILE_FORMAT;
                 filePath = Paths.get(getOutputFolder(), fileName).toString();
                 file=new File(filePath);
@@ -76,6 +76,7 @@ public class Writer {
 
                 imageNumber++;
             }
+            Main.gui.println("Done");
         }
         else{
             //System.out.println("No valid images found");
