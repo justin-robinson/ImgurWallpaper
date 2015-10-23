@@ -43,19 +43,18 @@ public class GUI {
 		// get the prepopulated sources for wallpapers
 		try {
 			galleries = Downloader.getSourceURLs();
+			this.show();
 		} catch ( Exception e ) {
 			JOptionPane.showMessageDialog(
 					frame,
 					e.getMessage(),
-					"Error getting source urls",
+					"Initialization Error",
 					JOptionPane.ERROR_MESSAGE);
 		}
 
 	}
 
-	public void show() {
-
-		if ( galleries != null ) {
+	private void show() {
 
 			//text input for url
 			textField = new JTextField(40);
@@ -178,8 +177,6 @@ public class GUI {
 			//frame.setAlwaysOnTop(true);
 			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			frame.setVisible(true);
-		}
-
 
 	}
 
