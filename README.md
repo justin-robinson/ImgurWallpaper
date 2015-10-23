@@ -1,6 +1,6 @@
 ImgurWallpaper
 ==============
-Downloads wallpapers from imgur galleris in bulk
+Downloads wallpapers from imgur galleries in bulk
 
 ##Run
 
