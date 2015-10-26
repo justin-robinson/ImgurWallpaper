@@ -7,9 +7,11 @@ import pw.jor.imgurwallpaper.Main;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Created by jrobinson on 10/20/15.
@@ -22,69 +24,71 @@ public class Writer {
     public static void writeFiles ( ArrayList<String> imageHashes ) {
 
         // write all images to file
-        if(imageHashes.size() > 0){
-            Main.gui.println(imageHashes.size() + " images found!");
-            File file;
-            BufferedImage bufferedImage;
-            FileOutputStream writer;
-            String filePath;
-            int imageNumber = 1;
+        Main.gui.println(imageHashes.size() + " images found!");
+        Container imageContainer;
+        File file;
 
-            int width, height;
+        Container.resetImageNumberCounter();
 
-            for( String fileName : imageHashes ) {
-                fileName += "." + FILE_FORMAT;
-                filePath = Paths.get(getOutputFolder(), fileName).toString();
-                file=new File(filePath);
-                if(!file.exists()){
+        Predicate<Container> fileExistsPredicate = iC -> !iC.getFile().exists();
+        Consumer<Container> fileExistsConsumer = iC -> Main.gui.println(iC.getOutputPrefix() + "already exists!");
 
-                    bufferedImage = Downloader.getImage("http://i.imgur.com/"+fileName);
-                    width = bufferedImage.getWidth();
-                    height = bufferedImage.getHeight();
+        Predicate<Container> rightSizePredicate = iC -> !Constraint.isRightSize(
+                iC.getBufferedImage().getWidth(),
+                iC.getBufferedImage().getHeight());
+        Consumer<Container> rightSizeConsumer = iC -> Main.gui.println(iC.getOutputPrefix() + "is not the right size");
 
-                    // is this image the right size?
-                    if ( Constraint.isRightSize(width, height) ) {
-                        try {
+        for( String fileName : imageHashes ) {
+            file = new File(Paths.get(getOutputFolder(), fileName + "." + FILE_FORMAT).toString());
+            imageContainer = new Container(
+                    Downloader.getImage("http://i.imgur.com/" + file.getName() ),
+                    file);
 
-                            writer=new FileOutputStream(filePath);
+            Tester tester = new Tester();
 
-                            Main.gui.println(imageNumber + ". Downloading " + fileName);
+            // does the file exist already?
+            tester.testImage(imageContainer,
+                    fileExistsPredicate,
+                    fileExistsConsumer);
 
-                            try {
-                                ImageIO.write(
-                                        bufferedImage,
-                                        FILE_FORMAT,
-                                        file);
-                            } catch ( IOException e ) {
-                                Main.gui.println("Error reading or writing image: " + file.getName());
-                            }
+            // is the image the right size?
+            tester.testImage(imageContainer,
+                    rightSizePredicate,
+                    rightSizeConsumer);
 
-                            try {
-                                writer.close();
-                            } catch ( IOException e ) {
-                                Main.gui.println("Error closing reader or writer");
-                            }
-                        } catch (FileNotFoundException e) {
-                            Main.gui.println("Can't open file for writing");
-                        }
-                    } else {
-                        Main.gui.println(imageNumber + ". " + fileName + " does not meet min/max dimensions");
+            // write to file is all tests passed
+            if ( tester.allPassed() ) {
+
+                try {
+
+                    FileOutputStream writer = new FileOutputStream(imageContainer.getFile().getPath());
+
+                    Main.gui.println(imageContainer.getOutputPrefix() + "DOWNLOADING");
+
+                    try {
+                        ImageIO.write(
+                                imageContainer.getBufferedImage(),
+                                FILE_FORMAT,
+                                imageContainer.getFile());
+                    } catch (IOException e) {
+                        Main.gui.println("Error reading or writing image: " + imageContainer.getFile().getName());
+                        Main.gui.println(e.getMessage());
                     }
-                }
-                else{
-                    Main.gui.println(imageNumber + ". " + fileName + " already exists");
-                }
 
-                imageNumber++;
+                    try {
+                        writer.close();
+                    } catch (IOException e) {
+                        Main.gui.println("Error closing reader or writer");
+                    }
+                } catch (FileNotFoundException e) {
+                    Main.gui.println("Can't open file for writing");
+                }
             }
-            Main.gui.println("Done");
-        }
-        else{
-            //System.out.println("No valid images found");
-            Main.gui.println("No valid images found");
-        }
-    }
 
+
+        }
+        Main.gui.println("Done");
+    }
 
     private static String getOutputFolder () {
 
