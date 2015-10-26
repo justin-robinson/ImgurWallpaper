@@ -1,17 +1,15 @@
 package pw.jor.imgurwallpaper.image;
 
+import pw.jor.Test;
+import pw.jor.Tester;
 import pw.jor.environment.User;
 import pw.jor.imgurwallpaper.Downloader;
 import pw.jor.imgurwallpaper.Main;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 /**
  * Created by jrobinson on 10/20/15.
@@ -30,13 +28,21 @@ public class Writer {
 
         Container.resetImageNumberCounter();
 
-        Predicate<Container> fileExistsPredicate = iC -> !iC.getFile().exists();
-        Consumer<Container> fileExistsConsumer = iC -> Main.gui.println(iC.getOutputPrefix() + "already exists!");
+        Tester tester = new Tester();
 
-        Predicate<Container> rightSizePredicate = iC -> !Constraint.isRightSize(
-                iC.getBufferedImage().getWidth(),
-                iC.getBufferedImage().getHeight());
-        Consumer<Container> rightSizeConsumer = iC -> Main.gui.println(iC.getOutputPrefix() + "is not the right size");
+        // does the file exists
+        tester.addTest(new Test<Container>(
+                        iC -> !iC.getFile().exists(),
+                        iC -> Main.gui.println(iC.getOutputPrefix() + "already exists!")
+        ));
+
+        // is the image the right size?
+        tester.addTest(new Test<Container>(
+                iC -> !Constraint.isRightSize(
+                        iC.getBufferedImage().getWidth(),
+                        iC.getBufferedImage().getHeight()),
+                iC -> Main.gui.println(iC.getOutputPrefix() + "is not the right size")
+        ));
 
         for( String fileName : imageHashes ) {
             file = new File(Paths.get(getOutputFolder(), fileName + "." + FILE_FORMAT).toString());
@@ -44,20 +50,8 @@ public class Writer {
                     Downloader.getImage("http://i.imgur.com/" + file.getName() ),
                     file);
 
-            Tester tester = new Tester();
-
-            // does the file exist already?
-            tester.testImage(imageContainer,
-                    fileExistsPredicate,
-                    fileExistsConsumer);
-
-            // is the image the right size?
-            tester.testImage(imageContainer,
-                    rightSizePredicate,
-                    rightSizeConsumer);
-
             // write to file is all tests passed
-            if ( tester.allPassed() ) {
+            if ( tester.test(imageContainer) ) {
 
                 try {
 
