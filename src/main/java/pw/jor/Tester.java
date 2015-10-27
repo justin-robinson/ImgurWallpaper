@@ -1,24 +1,20 @@
 package pw.jor;
 
-import pw.jor.imgurwallpaper.image.Container;
-
 import java.util.ArrayList;
 
 /**
  * Created by jrobinson on 10/26/15.
  */
-public class Tester {
+public class Tester<T> {
 
-    private ArrayList<Test> tests = new ArrayList<>();
+    private ArrayList<Test<T>> tests = new ArrayList<>();
 
-    public boolean test( Container image ) {
+    public boolean test( T t ) {
 
         boolean allPassed = true;
 
-        for ( Test tester : this.tests ) {
-            if (tester.test(image)) {
-                tester.accept(image);
-            } else {
+        for ( Test<T> tester : this.tests ) {
+            if ( ! tester.test(t) ) {
                 allPassed = false;
             }
         }
@@ -26,7 +22,7 @@ public class Tester {
         return allPassed;
     }
 
-    public void addTest(Test test) {
+    public void addTest(Test<T> test) {
         tests.add(test);
     }
 }

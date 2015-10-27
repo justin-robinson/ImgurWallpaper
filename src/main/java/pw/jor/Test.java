@@ -8,19 +8,34 @@ import java.util.function.Predicate;
  */
 public class Test<T> {
 
-    private Predicate<T> containerPredicate;
-    private Consumer<T> containerConsumer;
+    private Predicate<T> predicate;
+    private Consumer<T> acceptConsumer;
+    private Consumer<T> rejectConsumer;
 
-    public Test ( Predicate<T> containerPredicate, Consumer<T> containerConsumer ) {
-        this.containerPredicate = containerPredicate;
-        this.containerConsumer = containerConsumer;
+    public Test ( Predicate<T> predicate, Consumer<T> acceptConsumer, Consumer<T> rejectConsumer ) {
+        this.predicate = predicate;
+        this.acceptConsumer = acceptConsumer;
+        this.rejectConsumer = rejectConsumer;
     }
 
     public boolean test ( T t ) {
-        return this.containerPredicate.test(t);
+
+        boolean pass = this.predicate.test(t);
+
+        if ( pass ) {
+            this.accept(t);
+        } else {
+            this.reject(t);
+        }
+
+        return pass;
     }
 
     public void accept ( T t ) {
-        this.containerConsumer.accept(t);
+        this.acceptConsumer.accept(t);
+    }
+
+    public void reject ( T t ) {
+        this.rejectConsumer.accept(t);
     }
 }

@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
+ * Writes images to file
  * Created by jrobinson on 10/20/15.
  */
 public class Writer {
@@ -28,19 +29,21 @@ public class Writer {
 
         Container.resetImageNumberCounter();
 
-        Tester tester = new Tester();
+        Tester<Container> tester = new Tester<>();
 
         // does the file exists
-        tester.addTest(new Test<Container>(
+        tester.addTest(new Test<>(
                         iC -> !iC.getFile().exists(),
+                        iC -> {},
                         iC -> Main.gui.println(iC.getOutputPrefix() + "already exists!")
         ));
 
         // is the image the right size?
-        tester.addTest(new Test<Container>(
+        tester.addTest(new Test<>(
                 iC -> !Constraint.isRightSize(
                         iC.getBufferedImage().getWidth(),
                         iC.getBufferedImage().getHeight()),
+                iC -> {},
                 iC -> Main.gui.println(iC.getOutputPrefix() + "is not the right size")
         ));
 
