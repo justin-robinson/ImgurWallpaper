@@ -28,7 +28,7 @@ public class Worker extends Thread {
         String body;
 
         // user defined or pre populated url?
-        Main.gui.selection = Main.gui.radios.getSelection().getActionCommand();
+        GUI.getInstance().selection = GUI.getInstance().radios.getSelection().getActionCommand();
 
         // what url are we using?
         int selectedURLIndex=0;
@@ -48,7 +48,7 @@ public class Worker extends Thread {
             // write hashes to file
             Writer.writeFiles(parser.getImageHashes());
 
-        } while(Main.gui.downloadAllCheckBox.isSelected() && selectedURLIndex < Main.gui.galleries.length);
+        } while(GUI.getInstance().downloadAllCheckBox.isSelected() && selectedURLIndex < GUI.getInstance().galleries.length);
 
     }
 
@@ -57,16 +57,16 @@ public class Worker extends Thread {
         String url = "";
 
         // download all urls checked?
-        if(Main.gui.downloadAllCheckBox.isSelected()){
-            url = Main.gui.galleries[selection];
+        if(GUI.getInstance().downloadAllCheckBox.isSelected()){
+            url = GUI.getInstance().galleries[selection];
         }
         // user input url?
-        else if(Main.gui.selection.equals(Main.gui.USER_SELECTION)){
-            url = Main.gui.textField.getText();
+        else if(GUI.getInstance().selection.equals(GUI.getInstance().USER_SELECTION)){
+            url = GUI.getInstance().textField.getText();
         }
         // prepopulated url?
-        else if(Main.gui.selection.equals(Main.gui.DEFINED_SELECTION)){
-            url = Main.gui.galleries[Main.gui.comboBox.getSelectedIndex()];
+        else if(GUI.getInstance().selection.equals(GUI.getInstance().DEFINED_SELECTION)){
+            url = GUI.getInstance().galleries[GUI.getInstance().comboBox.getSelectedIndex()];
         }
 
         return url;

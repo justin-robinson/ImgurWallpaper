@@ -1,6 +1,7 @@
 package pw.jor.imgurwallpaper.image;
 
 import pw.jor.imgurwallpaper.Main;
+import pw.jor.imgurwallpaper.gui.GUI;
 
 /**
  * Created by jrobinson on 10/23/15.
@@ -8,10 +9,10 @@ import pw.jor.imgurwallpaper.Main;
 public class Constraint {
 
     public static boolean isRightSize(int width, int height) {
-        int minWidth = (int) Main.gui.minWidth.getValue(),
-                minHeight = (int)Main.gui.minHeight.getValue(),
-                maxWidth = (int)Main.gui.maxWidth.getValue() == 0 ? Integer.MAX_VALUE : (int)Main.gui.maxWidth.getValue(),
-                maxHeight = (int)Main.gui.maxHeight.getValue() == 0 ? Integer.MAX_VALUE : (int)Main.gui.maxHeight.getValue();
+        int minWidth = (int) GUI.getInstance().minWidth.getValue(),
+                minHeight = (int)GUI.getInstance().minHeight.getValue(),
+                maxWidth = (int)GUI.getInstance().maxWidth.getValue() == 0 ? Integer.MAX_VALUE : (int)GUI.getInstance().maxWidth.getValue(),
+                maxHeight = (int)GUI.getInstance().maxHeight.getValue() == 0 ? Integer.MAX_VALUE : (int)GUI.getInstance().maxHeight.getValue();
 
         return (minWidth <= width && width <= maxWidth &&
                 minHeight <= height && height <= maxHeight);

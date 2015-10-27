@@ -5,6 +5,7 @@ import pw.jor.Tester;
 import pw.jor.environment.User;
 import pw.jor.imgurwallpaper.Downloader;
 import pw.jor.imgurwallpaper.Main;
+import pw.jor.imgurwallpaper.gui.GUI;
 
 import javax.imageio.ImageIO;
 import java.io.*;
@@ -23,7 +24,7 @@ public class Writer {
     public static void writeFiles ( ArrayList<String> imageHashes ) {
 
         // write all images to file
-        Main.gui.println(imageHashes.size() + " images found!");
+        GUI.getInstance().println(imageHashes.size() + " images found!");
         Container imageContainer;
         File file;
 
@@ -35,7 +36,7 @@ public class Writer {
         tester.addTest(new Test<>(
                         iC -> !iC.getFile().exists(),
                         iC -> {},
-                        iC -> Main.gui.println(iC.getOutputPrefix() + "already exists!")
+                        iC -> GUI.getInstance().println(iC.getOutputPrefix() + "already exists!")
         ));
 
         // is the image the right size?
@@ -44,7 +45,7 @@ public class Writer {
                         iC.getBufferedImage().getWidth(),
                         iC.getBufferedImage().getHeight()),
                 iC -> {},
-                iC -> Main.gui.println(iC.getOutputPrefix() + "is not the right size")
+                iC -> GUI.getInstance().println(iC.getOutputPrefix() + "is not the right size")
         ));
 
         for( String fileName : imageHashes ) {
@@ -60,7 +61,7 @@ public class Writer {
 
                     FileOutputStream writer = new FileOutputStream(imageContainer.getFile().getPath());
 
-                    Main.gui.println(imageContainer.getOutputPrefix() + "DOWNLOADING");
+                    GUI.getInstance().println(imageContainer.getOutputPrefix() + "DOWNLOADING");
 
                     try {
                         ImageIO.write(
@@ -68,23 +69,23 @@ public class Writer {
                                 FILE_FORMAT,
                                 imageContainer.getFile());
                     } catch (IOException e) {
-                        Main.gui.println("Error reading or writing image: " + imageContainer.getFile().getName());
-                        Main.gui.println(e.getMessage());
+                        GUI.getInstance().println("Error reading or writing image: " + imageContainer.getFile().getName());
+                        GUI.getInstance().println(e.getMessage());
                     }
 
                     try {
                         writer.close();
                     } catch (IOException e) {
-                        Main.gui.println("Error closing reader or writer");
+                        GUI.getInstance().println("Error closing reader or writer");
                     }
                 } catch (FileNotFoundException e) {
-                    Main.gui.println("Can't open file for writing");
+                    GUI.getInstance().println("Can't open file for writing");
                 }
             }
 
 
         }
-        Main.gui.println("Done");
+        GUI.getInstance().println("Done");
     }
 
     private static String getOutputFolder () {

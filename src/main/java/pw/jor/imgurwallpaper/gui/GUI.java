@@ -5,7 +5,6 @@ import pw.jor.imgurwallpaper.Main;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.text.NumberFormat;
 
@@ -33,9 +32,14 @@ public class GUI {
     public static final String USER_SELECTION = "user";
     public static final String DEFINED_SELECTION = "defined";
 
+    private static GUI instance = new GUI();
     private Worker worker = new Worker();
 
-    public GUI(){
+    public static GUI getInstance() {
+        return instance;
+    }
+
+    private GUI(){
 
         //Frame for everything
         frame = new JFrame();
@@ -184,8 +188,8 @@ public class GUI {
 
     public void print(String message ) {
         System.out.print(message);
-        Main.gui.output.append(message);
-        Main.gui.output.setCaretPosition(Main.gui.output.getDocument().getLength());
+        this.output.append(message);
+        this.output.setCaretPosition(this.output.getDocument().getLength());
     }
 
     public void println(String message ) {

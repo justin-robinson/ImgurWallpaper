@@ -29,11 +29,11 @@ public class Downloader {
         try{
             page = new Scanner(new URL(url).openStream(), "UTF-8").useDelimiter("\\A").next();
         }catch (MalformedURLException e){
-            Main.gui.println("URL is invalid");
+            GUI.getInstance().println("URL is invalid");
         }catch(IOException e){
-            Main.gui.println("404 Page Not Found");
+            GUI.getInstance().println("404 Page Not Found");
         }catch(IllegalArgumentException e){
-            Main.gui.println("URL is invalid");
+            GUI.getInstance().println("URL is invalid");
         }
 
         return page;
@@ -52,9 +52,9 @@ public class Downloader {
             URL url = new URL(urlString);
             bufferedImage = ImageIO.read(url);
         } catch ( MalformedURLException e ) {
-            Main.gui.println("URL is invalid");
+            GUI.getInstance().println("URL is invalid");
         } catch ( IOException e ) {
-            Main.gui.println("404 parser not found");
+            GUI.getInstance().println("404 parser not found");
         }
 
         return bufferedImage;
