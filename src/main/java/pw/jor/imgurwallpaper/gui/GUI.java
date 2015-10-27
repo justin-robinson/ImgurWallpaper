@@ -87,23 +87,17 @@ public class GUI {
         JButton submit = new JButton("Submit");
         //button action
         submit.addActionListener((ActionEvent e) -> {
-            if(worker.isAlive()) {
-                worker.stop();
-            }
-            worker =  new Worker();
+            worker.stop();
+            worker = new Worker();
             worker.start();
         });
         JButton pause = new JButton("Pause");
         pause.addActionListener((ActionEvent e) -> {
-            if(worker.isAlive()){
-                worker.suspend();
-            }
+            worker.suspend();
         });
         JButton resume = new JButton("Resume");
         resume.addActionListener((ActionEvent e) -> {
-            if(worker.isAlive()){
-                worker.resume();
-            }
+            worker.resume();
         });
 
         // width & height input fields

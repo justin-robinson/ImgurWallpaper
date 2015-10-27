@@ -1,39 +1,40 @@
 package pw.jor.imgurwallpaper.gui;
 
+import pw.jor.SafeThread;
 import pw.jor.imgurwallpaper.Downloader;
-import pw.jor.imgurwallpaper.Main;
+import pw.jor.imgurwallpaper.image.Container;
 import pw.jor.imgurwallpaper.parser.HTMLParser;
 import pw.jor.imgurwallpaper.image.Writer;
 import pw.jor.imgurwallpaper.parser.JSONParser;
 import pw.jor.imgurwallpaper.parser.ParserAbstract;
 
-import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 
 
 /**
  * Logic to handle "submit" button
  */
-public class Worker extends Thread {
+public class Worker extends SafeThread {
 
-    public void main(String[] args) {
-        Worker worker = new Worker();
-        worker.setDaemon(true);
-        worker.start();
-    }
-    public void run () {
+    public void action () {
 
         // what url did the user pick?
+        GUI gui = GUI.getInstance();
         String selection;
         String url;
         String body;
 
+
         // user defined or pre populated url?
-        GUI.getInstance().selection = GUI.getInstance().radios.getSelection().getActionCommand();
+        gui.selection = gui.radios.getSelection().getActionCommand();
 
         // what url are we using?
         int selectedURLIndex=0;
 
         do{
+            // stalls process if thread was suspended
+            blockSuspended();
+
             // get url
             selection= getGUISelection(selectedURLIndex++);
             url = createURL(selection);
@@ -45,10 +46,38 @@ public class Worker extends Thread {
             ParserAbstract parser = getParser(selection);
             parser.parse(body);
 
-            // write hashes to file
-            Writer.writeFiles(parser.getImageHashes());
+            // image hashes from the parser
+            ArrayList<String> imageHashes = parser.getImageHashes();
 
-        } while(GUI.getInstance().downloadAllCheckBox.isSelected() && selectedURLIndex < GUI.getInstance().galleries.length);
+            // image writer
+            Writer writer = new Writer();
+
+            // resets counter for image number back to 1
+            Container.resetImageNumberCounter();
+
+            // write hashes to file
+            for ( String fileName : imageHashes ) {
+
+                // stalls if the thread was suspended
+                blockSuspended();
+
+                // downloads image and writes file
+                writer.write(fileName);
+
+                // stop if thread died
+                if ( !threadActive() ) {
+                    break;
+                }
+            }
+
+        } while(
+                gui.downloadAllCheckBox.isSelected()
+                && selectedURLIndex < GUI.galleries.length
+                && threadActive()
+                );
+
+        gui.println("Done");
+
 
     }
 
@@ -58,15 +87,15 @@ public class Worker extends Thread {
 
         // download all urls checked?
         if(GUI.getInstance().downloadAllCheckBox.isSelected()){
-            url = GUI.getInstance().galleries[selection];
+            url = GUI.galleries[selection];
         }
         // user input url?
-        else if(GUI.getInstance().selection.equals(GUI.getInstance().USER_SELECTION)){
+        else if(GUI.getInstance().selection.equals(GUI.USER_SELECTION)){
             url = GUI.getInstance().textField.getText();
         }
         // prepopulated url?
-        else if(GUI.getInstance().selection.equals(GUI.getInstance().DEFINED_SELECTION)){
-            url = GUI.getInstance().galleries[GUI.getInstance().comboBox.getSelectedIndex()];
+        else if(GUI.getInstance().selection.equals(GUI.DEFINED_SELECTION)){
+            url = GUI.galleries[GUI.getInstance().comboBox.getSelectedIndex()];
         }
 
         return url;

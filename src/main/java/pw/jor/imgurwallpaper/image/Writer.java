@@ -21,22 +21,17 @@ public class Writer {
     private static String outputFolder = null;
     public static String FILE_FORMAT = "jpg";
 
-    public static void writeFiles ( ArrayList<String> imageHashes ) {
+    private Tester<Container> tester;
 
-        // write all images to file
-        GUI.getInstance().println(imageHashes.size() + " images found!");
-        Container imageContainer;
-        File file;
+    public Writer () {
 
-        Container.resetImageNumberCounter();
-
-        Tester<Container> tester = new Tester<>();
+        tester = new Tester<>();
 
         // does the file exists
         tester.addTest(new Test<>(
-                        iC -> !iC.getFile().exists(),
-                        iC -> {},
-                        iC -> GUI.getInstance().println(iC.getOutputPrefix() + "already exists!")
+                iC -> !iC.getFile().exists(),
+                iC -> {},
+                iC -> GUI.getInstance().println(iC.getOutputPrefix() + "already exists!")
         ));
 
         // is the image the right size?
@@ -48,44 +43,43 @@ public class Writer {
                 iC -> GUI.getInstance().println(iC.getOutputPrefix() + "is not the right size")
         ));
 
-        for( String fileName : imageHashes ) {
-            file = new File(Paths.get(getOutputFolder(), fileName + "." + FILE_FORMAT).toString());
-            imageContainer = new Container(
-                    Downloader.getImage("http://i.imgur.com/" + file.getName() ),
-                    file);
+    }
 
-            // write to file is all tests passed
-            if ( tester.test(imageContainer) ) {
+    public void write ( String fileName ) {
+
+        File file = new File(Paths.get(getOutputFolder(), fileName + "." + FILE_FORMAT).toString());
+        Container imageContainer = new Container(
+                Downloader.getImage("http://i.imgur.com/" + file.getName() ),
+                file);
+
+        // write to file is all tests passed
+        if ( tester.test(imageContainer) ) {
+
+            try {
+
+                FileOutputStream writer = new FileOutputStream(imageContainer.getFile().getPath());
+
+                GUI.getInstance().println(imageContainer.getOutputPrefix() + "DOWNLOADING");
 
                 try {
-
-                    FileOutputStream writer = new FileOutputStream(imageContainer.getFile().getPath());
-
-                    GUI.getInstance().println(imageContainer.getOutputPrefix() + "DOWNLOADING");
-
-                    try {
-                        ImageIO.write(
-                                imageContainer.getBufferedImage(),
-                                FILE_FORMAT,
-                                imageContainer.getFile());
-                    } catch (IOException e) {
-                        GUI.getInstance().println("Error reading or writing image: " + imageContainer.getFile().getName());
-                        GUI.getInstance().println(e.getMessage());
-                    }
-
-                    try {
-                        writer.close();
-                    } catch (IOException e) {
-                        GUI.getInstance().println("Error closing reader or writer");
-                    }
-                } catch (FileNotFoundException e) {
-                    GUI.getInstance().println("Can't open file for writing");
+                    ImageIO.write(
+                            imageContainer.getBufferedImage(),
+                            FILE_FORMAT,
+                            imageContainer.getFile());
+                } catch (IOException e) {
+                    GUI.getInstance().println("Error reading or writing image: " + imageContainer.getFile().getName());
+                    GUI.getInstance().println(e.getMessage());
                 }
+
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    GUI.getInstance().println("Error closing reader or writer");
+                }
+            } catch (FileNotFoundException e) {
+                GUI.getInstance().println("Can't open file for writing");
             }
-
-
         }
-        GUI.getInstance().println("Done");
     }
 
     private static String getOutputFolder () {
