@@ -104,7 +104,7 @@ public class Writer {
      */
     private static String getOutputDirectory() {
 
-        if ( outputDirectory == null ){
+        if ( outputDirectory == null ) {
 
             // get the directory
             outputDirectory =

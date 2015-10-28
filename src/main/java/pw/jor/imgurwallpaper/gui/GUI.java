@@ -22,6 +22,7 @@ public class GUI {
     public JTextField textField;
     public String selection;
     public ButtonGroup radios;
+    public JButton pause;
     public JComboBox<?> comboBox;
     public JCheckBox downloadAllCheckBox;
     public JFormattedTextField minWidth;
@@ -100,17 +101,7 @@ public class GUI {
         radioPanel.add(defined);
 
         //buttons for start, pause, resume
-        JButton submit = new JButton("Submit");
-        //button action
-        submit.addActionListener((ActionEvent e) -> {
-            if ( worker.isAlive() ) {
-                worker.stop();
-            }
-            worker = new Worker();
-            worker.start();
-        });
-
-        JButton pause = new JButton("Pause");
+        pause = new JButton("Pause");
         pause.addActionListener( e -> {
             if ( worker.isAlive() ) {
                 if ( worker.isSuspended() ) {
@@ -122,6 +113,18 @@ public class GUI {
                 }
             }
         } );
+
+        JButton submit = new JButton("GO");
+        //button action
+        submit.addActionListener((ActionEvent e) -> {
+            if ( worker.isAlive() ) {
+                worker.stop();
+            }
+            worker = new Worker();
+            worker.start();
+            pause.setVisible(true);
+        });
+
 
         // width & height input fields
         NumberFormat format = NumberFormat.getInstance();
@@ -164,9 +167,9 @@ public class GUI {
         JPanel top = new JPanel();
         top.add(radioPanel);
         top.add(inputPanel);
+        top.add(downloadAllCheckBox);
         top.add(submit);
         top.add(pause);
-        top.add(downloadAllCheckBox);
         top.add(sizePanel);
         top.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createTitledBorder("Enter the imgur gallery url"),

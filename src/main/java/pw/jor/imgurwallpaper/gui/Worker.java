@@ -84,7 +84,6 @@ public class Worker extends SafeThread {
 
         gui.println("Done");
 
-
     }
 
     /**
