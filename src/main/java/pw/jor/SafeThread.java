@@ -10,10 +10,20 @@ public abstract class SafeThread implements Runnable {
     private Thread thisThread;
     private boolean threadSuspended = false;
 
+    /**
+     * Abstract function to do thread work
+     */
     public abstract void action();
 
+    /**
+     * Interface method from Runnable
+     */
     public void run () {
+
+        // get pointer to this thread so stop() can work
         thisThread = Thread.currentThread();
+
+        // run user-defined action
         action();
     }
 
@@ -50,14 +60,6 @@ public abstract class SafeThread implements Runnable {
     }
 
     /**
-     * Checks that the thread is alive
-     * @return boolean
-     */
-    public boolean isAlive() {
-        return this.thread != null && this.thread.isAlive();
-    }
-
-    /**
      * Stalls the thread until resume() is called
      *
      * Call this when your run method has a chance to suspend
@@ -65,7 +67,7 @@ public abstract class SafeThread implements Runnable {
     public void blockSuspended() {
         if ( threadSuspended ) {
             synchronized (this) {
-                while( threadSuspended && threadActive() ) {
+                while( threadSuspended && isAlive() ) {
                     try {
                         wait();
                     } catch ( InterruptedException e ) {
@@ -78,9 +80,19 @@ public abstract class SafeThread implements Runnable {
 
     /**
      * Checks that we haven't called stop()
-     * @return boolean
+     *
+     * @return whether or not this thread has been stopped
      */
-    public boolean threadActive () {
+    public boolean isAlive() {
         return thread == thisThread;
+    }
+
+    /**
+     * Gets the Thread object
+     *
+     * @return the Thread object
+     */
+    public Thread getThread () {
+        return this.thread;
     }
 }

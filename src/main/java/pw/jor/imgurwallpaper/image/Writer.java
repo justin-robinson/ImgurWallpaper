@@ -4,25 +4,28 @@ import pw.jor.Test;
 import pw.jor.Tester;
 import pw.jor.environment.User;
 import pw.jor.imgurwallpaper.Downloader;
-import pw.jor.imgurwallpaper.Main;
 import pw.jor.imgurwallpaper.gui.GUI;
 
 import javax.imageio.ImageIO;
 import java.io.*;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 
 /**
  * Writes images to file
- * Created by jrobinson on 10/20/15.
+ *
+ * @author jrobinson
+ * @since 10/20/15
  */
 public class Writer {
 
-    private static String outputFolder = null;
+    private static String outputDirectory = null;
     public static String FILE_FORMAT = "jpg";
 
     private Tester<Container> tester;
 
+    /**
+     * Sets up tester to be used on all images
+     */
     public Writer () {
 
         tester = new Tester<>();
@@ -45,22 +48,32 @@ public class Writer {
 
     }
 
-    public void write ( String fileName ) {
+    /**
+     * Downloads and writes image to file
+     *
+     * @param hash Imgur hash to download
+     */
+    public void write ( String hash ) {
 
-        File file = new File(Paths.get(getOutputFolder(), fileName + "." + FILE_FORMAT).toString());
+        // create file name from hash
+        String fileName = hash + "." + FILE_FORMAT;
+
+        // container for image content and save location
         Container imageContainer = new Container(
-                Downloader.getImage("http://i.imgur.com/" + file.getName() ),
-                file);
+                Downloader.getImage("http://i.imgur.com/" + fileName ),
+                new File(Paths.get(getOutputDirectory(), fileName).toString()));
 
         // write to file is all tests passed
         if ( tester.test(imageContainer) ) {
 
             try {
 
+                // create file writer
                 FileOutputStream writer = new FileOutputStream(imageContainer.getFile().getPath());
 
                 GUI.getInstance().println(imageContainer.getOutputPrefix() + "DOWNLOADING");
 
+                // attempt to write file
                 try {
                     ImageIO.write(
                             imageContainer.getBufferedImage(),
@@ -71,6 +84,7 @@ public class Writer {
                     GUI.getInstance().println(e.getMessage());
                 }
 
+                // close the writer
                 try {
                     writer.close();
                 } catch (IOException e) {
@@ -82,14 +96,28 @@ public class Writer {
         }
     }
 
-    private static String getOutputFolder () {
+    /**
+     * Gets and creates directory for writing images
+     *
+     * @return directory to write images
+     */
+    private static String getOutputDirectory() {
 
-        if ( outputFolder == null ){
-            outputFolder = User.getUserPicturesFolder().toString();
+        if ( outputDirectory == null ){
+
+            // get the directory
+            outputDirectory =
+                    Paths.get(
+                            User.getUserPicturesFolder().toString(),
+                            "Wallpapers").toString();
+
+
+            // ensure folder exists
+            new File(outputDirectory).mkdir();
 
         }
 
-        return outputFolder;
+        return outputDirectory;
 
     }
 }

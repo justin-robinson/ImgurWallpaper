@@ -4,7 +4,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**
- * Created by jrobinson on 10/26/15.
+ * Container for an image and it's output path
+ *
+ * @author jrobinson
+ * @since 10/26/15
  */
 public class Container {
 
@@ -14,28 +17,57 @@ public class Container {
 
     public static int imageNumberCounter = 0;
 
-    Container(BufferedImage bufferedImage, File file ) {
+    /**
+     * Constructor
+     *
+     * @param bufferedImage image to save
+     * @param file where to save image
+     */
+    public Container(BufferedImage bufferedImage, File file ) {
         this.bufferedImage = bufferedImage;
         this.file = file;
         this.imageNumber = ++imageNumberCounter;
     }
 
+    /**
+     * Gets contained image
+     *
+     * @return contained image
+     */
     public BufferedImage getBufferedImage () {
         return this.bufferedImage;
     }
 
+    /**
+     * gets file where image will be saved
+     *
+     * @return file where image will be saved
+     */
     public File getFile () {
         return this.file;
     }
 
+    /**
+     * Gets image number
+     *
+     * @return image number
+     */
     public int getImageNumber () {
         return this.imageNumber;
     }
 
+    /**
+     * Resets image number counter
+     */
     public static void resetImageNumberCounter() {
         imageNumberCounter = 0;
     }
 
+    /**
+     * Gets prefix for gui and stdout messages
+     *
+     * @return prefix for gui and stdout messages
+     */
     public String getOutputPrefix () {
         return this.getImageNumber() + ". " + this.getFile().getName() + " ";
     }

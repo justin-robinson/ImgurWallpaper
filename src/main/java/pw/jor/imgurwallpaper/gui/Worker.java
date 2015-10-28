@@ -12,10 +12,16 @@ import java.util.ArrayList;
 
 
 /**
- * Logic to handle "submit" button
+ * Worker thread to download images
+ *
+ * @author jrobinson
+ * @since 10/20/15
  */
 public class Worker extends SafeThread {
 
+    /**
+     * Downloads images from gallery or galleries provided from gui
+     */
     public void action () {
 
         // what url did the user pick?
@@ -40,7 +46,7 @@ public class Worker extends SafeThread {
             url = createURL(selection);
 
             // get parser contents
-            body = Downloader.getPageContents(url);
+            body = Downloader.download(url);
 
             // parse body for image hashes
             ParserAbstract parser = getParser(selection);
@@ -58,14 +64,14 @@ public class Worker extends SafeThread {
             // write hashes to file
             for ( String fileName : imageHashes ) {
 
-                // stalls if the thread was suspended
+                // stalls process if the thread was suspended
                 blockSuspended();
 
                 // downloads image and writes file
                 writer.write(fileName);
 
                 // stop if thread died
-                if ( !threadActive() ) {
+                if ( !isAlive() ) {
                     break;
                 }
             }
@@ -73,7 +79,7 @@ public class Worker extends SafeThread {
         } while(
                 gui.downloadAllCheckBox.isSelected()
                 && selectedURLIndex < GUI.galleries.length
-                && threadActive()
+                && isAlive()
                 );
 
         gui.println("Done");
@@ -81,6 +87,12 @@ public class Worker extends SafeThread {
 
     }
 
+    /**
+     * Gets the input from the gui
+     *
+     * @param selection index into gallery urls from GUI
+     * @return url to download
+     */
     private String getGUISelection(int selection) {
 
         String url = "";
@@ -101,26 +113,37 @@ public class Worker extends SafeThread {
         return url;
     }
 
-    private String createURL(String hash) {
+    /**
+     * Create proper url to scrape from gallery url
+     *
+     * @param url full url or image hash
+     * @return url to download
+     */
+    private String createURL(String url) {
 
-        String url;
+        // if url is just a hash, create the Imgur url
+        return isURL(url)
+                ? url + "/new/page/1/hit?scrolled"
+                : "http://imgur.com/ajaxalbums/getimages/" + url + "/hit.json?all=true";
 
-        // if url is just a hash, create the imgur url
-        url = isURL(hash)
-                ? hash + "/new/page/1/hit?scrolled"
-                : galleryHashToURL(hash);
-
-        return url;
     }
 
+    /**
+     * Tests string to see if it's a url
+     *
+     * @param url full url or image hash
+     * @return whether the url is actually a url
+     */
     private boolean isURL ( String url ) {
         return url.startsWith("http", 0);
     }
 
-    private String galleryHashToURL(String hash) {
-        return "http://imgur.com/ajaxalbums/getimages/" + hash + "/hit.json?all=true";
-    }
-
+    /**
+     * Gets the correct parser based on the url
+     *
+     * @param url full url or image hash
+     * @return correct ParserAbstract class instance
+     */
     private ParserAbstract getParser( String url ) {
 
             return isURL(url)

@@ -1,7 +1,10 @@
 package pw.jor.imgurwallpaper.imgur;
 
 /**
- * Created by jrobinson on 10/22/15.
+ * Class to contain Imgur's hit json object
+ *
+ * @author jrobinson
+ * @since 10/22/15
  */
 public class Hit {
 

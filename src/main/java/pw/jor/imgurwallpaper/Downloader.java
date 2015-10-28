@@ -14,26 +14,51 @@ import java.net.URL;
 
 /**
  * All download logic is here
+ *
+ * @author jrobinson
+ * @since 10/23/15
  */
 public class Downloader {
 
     private static final String DOWNLOAD_LIST_URL = "http://jor.pw/downloads/walls.txt";
 
     /**
-     * gets the contents of a url
-     * @param url
-     * @return
+     * Gets the contents of a url
+     *
+     * @param url link to page
+     * @return contents of page at url
      */
-    public static String getPageContents ( String url ) {
+    public static String download(String url) {
+
         String page="";
+        InputStream inputStream = null;
+        Scanner streamScanner = null;
+
         try{
-            page = new Scanner(new URL(url).openStream(), "UTF-8").useDelimiter("\\A").next();
-        }catch (MalformedURLException e){
+            // download page
+            inputStream = new URL(url).openStream();
+            streamScanner = new Scanner(inputStream, "UTF-8").useDelimiter("\\A");
+            page = streamScanner.hasNext() ? streamScanner.next() : page;
+        } catch ( MalformedURLException e ) {
             GUI.getInstance().println("URL is invalid");
-        }catch(IOException e){
+        } catch ( IOException e ) {
             GUI.getInstance().println("404 Page Not Found");
-        }catch(IllegalArgumentException e){
+        } catch ( IllegalArgumentException e ) {
             GUI.getInstance().println("URL is invalid");
+        } finally {
+
+            // close stream and scanner
+            if ( inputStream != null ) {
+                try{
+                    inputStream.close();
+                } catch ( IOException e ) {
+                    GUI.getInstance().println("Error closing inputStream");
+                }
+            }
+
+            if ( streamScanner != null ) {
+                streamScanner.close();
+            }
         }
 
         return page;
@@ -41,16 +66,16 @@ public class Downloader {
 
     /**
      * Buffers url into image
-     * @param urlString
-     * @return
+     *
+     * @param url link to page
+     * @return buffered image from url
      */
-    public static BufferedImage getImage ( String urlString ) {
+    public static BufferedImage getImage ( String url ) {
 
         BufferedImage bufferedImage = null;
 
         try{
-            URL url = new URL(urlString);
-            bufferedImage = ImageIO.read(url);
+            bufferedImage = ImageIO.read(new URL(url));
         } catch ( MalformedURLException e ) {
             GUI.getInstance().println("URL is invalid");
         } catch ( IOException e ) {
@@ -62,37 +87,29 @@ public class Downloader {
     }
 
     /**
-     * Gets list of urls and hashes to prepopulate ui with
-     * @return
+     * Gets list of urls and gallery hashes to prepopulate ui with
+     *
+     * @return list of default urls and gallery hashes available to download
      */
-    public static String[] getSourceURLs () throws Exception{
+    public static String[] getSourceURLs () {
 
-        ArrayList<String> galleriesList = new ArrayList<String>();
+        // where we will store the urls and gallery hashes
+        ArrayList<String> galleriesList = new ArrayList<>();
 
-        //Get the gallery list from the server
-        InputStream inputStream = null;
-
-        // get text file
-        URL url = new URL(DOWNLOAD_LIST_URL);
-        inputStream = url.openStream();
-
-        // create scanner
-        Scanner pageScanner = new Scanner(inputStream, "UTF-8");
-        String page = pageScanner.useDelimiter("\\A").next();
-
-        // close connections
-        inputStream.close();
-        pageScanner.close();
+        // download page
+        String page = download(DOWNLOAD_LIST_URL);
 
         //Extract individual galleries
-        Scanner input = new Scanner(page);
-        String line;
-        while(input.hasNext()){
-            line=input.nextLine().trim();
-            galleriesList.add(line);
+        Scanner pageScanner = new Scanner(page);
+        while( pageScanner.hasNext() ){
+            galleriesList.add(pageScanner.nextLine().trim());
         }
 
+        // close streams and scanners
+        pageScanner.close();
+
+        // convert array list to array
         return galleriesList.toArray(new String[galleriesList.size()]);
 
-    };
+    }
 }

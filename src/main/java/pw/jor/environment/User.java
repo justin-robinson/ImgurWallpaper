@@ -1,6 +1,5 @@
 package pw.jor.environment;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -12,35 +11,38 @@ import com.sun.jna.platform.win32.WinReg;
 
 
 /**
- * Created by jrob0 on 10/23/2015.
+ * OS User helper methods
+ *
+ * @author jrobinson
+ * @since 10/23/15
  */
 public class User {
 
+    /**
+     * Returns Pictures library folder in Win7+ otherwise the Pictures folder in a user's home directory
+     * @return full path to current user's pictures folder
+     */
     public static Path getUserPicturesFolder () {
 
         Path picturePath;
 
         if ( SystemUtils.IS_OS_WINDOWS ) {
-            String key = "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders";
-            String value = "My Pictures";
 
+            // read windows registry for the location of the pictures library
             String pictureVariable = Advapi32Util.registryGetStringValue(
                     WinReg.HKEY_CURRENT_USER,
-                    key,
-                    value
+                    "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders",
+                    "My Pictures"
             );
 
-            pictureVariable = Variable.expand(pictureVariable);
+            // expand environement variables in path
+            pictureVariable = Variable.expand(pictureVariable, Variable.WINDOWS_CMD);
 
-            picturePath = Paths.get(pictureVariable, "Wallpapers");
+            picturePath = Paths.get(pictureVariable);
 
         } else {
-            picturePath = Paths.get(SystemUtils.USER_HOME, "Pictures", "Wallpapers");
+            picturePath = Paths.get(SystemUtils.USER_HOME, "Pictures");
         }
-
-        // make folders
-        File dir = new File(picturePath.toString());
-        dir.mkdir();
 
         return picturePath;
     }

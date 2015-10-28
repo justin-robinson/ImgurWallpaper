@@ -1,7 +1,6 @@
 package pw.jor.imgurwallpaper.gui;
 
 import pw.jor.imgurwallpaper.Downloader;
-import pw.jor.imgurwallpaper.Main;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,10 +8,14 @@ import java.awt.event.WindowEvent;
 import java.text.NumberFormat;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.text.NumberFormatter;
 
-
+/**
+ * GUI singleton for ImgurWallpaper
+ *
+ * @author jrobinson
+ * @since 04/12/14
+ */
 public class GUI {
 
     public JTextArea output;
@@ -35,18 +38,28 @@ public class GUI {
     private static GUI instance = new GUI();
     private Worker worker = new Worker();
 
+    /**
+     * Gets the singleton
+     *
+     * @return GUI instance
+     */
     public static GUI getInstance() {
         return instance;
     }
 
+    /**
+     * Private constructor
+     */
     private GUI(){
 
         //Frame for everything
         frame = new JFrame();
 
-        // get the prepopulated sources for wallpapers
         try {
+            // get the prepopulated sources for wallpapers
             galleries = Downloader.getSourceURLs();
+
+            // show the gui
             this.show();
         } catch ( Exception e ) {
             error(e.getMessage());
@@ -54,6 +67,9 @@ public class GUI {
 
     }
 
+    /**
+     * Creates and shows the gui
+     */
     private void show() {
 
         //text input for url
@@ -91,14 +107,12 @@ public class GUI {
             worker = new Worker();
             worker.start();
         });
+
         JButton pause = new JButton("Pause");
-        pause.addActionListener((ActionEvent e) -> {
-            worker.suspend();
-        });
+        pause.addActionListener( e -> worker.suspend() );
+
         JButton resume = new JButton("Resume");
-        resume.addActionListener((ActionEvent e) -> {
-            worker.resume();
-        });
+        resume.addActionListener( e -> worker.resume() );
 
         // width & height input fields
         NumberFormat format = NumberFormat.getInstance();
@@ -146,7 +160,9 @@ public class GUI {
         top.add(resume);
         top.add(downloadAllCheckBox);
         top.add(sizePanel);
-        top.setBorder(setBorder("Enter the imgur gallery url"));
+        top.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder("Enter the imgur gallery url"),
+                BorderFactory.createEmptyBorder(5,5,5,5)));
 
         //scrollable output
         output = new JTextArea();
@@ -161,10 +177,12 @@ public class GUI {
         frame.pack();
         frame.setSize(new Dimension(1000, 400));
 
+        // kill worker thread on application close
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(WindowEvent winEvt) {
-                if(worker.isAlive())
+                if( worker.isAlive() ) {
                     worker.stop();
+                }
             }
         });
 
@@ -174,23 +192,32 @@ public class GUI {
 
     }
 
-    public Border setBorder(String title){
-        return BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(title),
-                BorderFactory.createEmptyBorder(5,5,5,5));
-    }
-
+    /**
+     * Prints message to gui and stdout
+     *
+     * @param message message to print
+     */
     public void print(String message ) {
         System.out.print(message);
         this.output.append(message);
         this.output.setCaretPosition(this.output.getDocument().getLength());
     }
 
+    /**
+     * Prints message and line break to gui and stdout
+     *
+     * @param message message to print
+     */
     public void println(String message ) {
         message += System.lineSeparator();
         this.print(message);
     }
 
+    /**
+     * Shows and error dialog with a message
+     *
+     * @param message error message
+     */
     public void error(String message ) {
         JOptionPane.showMessageDialog(
                 frame,
