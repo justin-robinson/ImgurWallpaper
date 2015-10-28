@@ -88,6 +88,14 @@ public abstract class SafeThread implements Runnable {
     }
 
     /**
+     * Whether or not the thread is suspended
+     * @return whether or not the thread is suspended
+     */
+    public boolean isSuspended () {
+        return this.threadSuspended;
+    }
+
+    /**
      * Gets the Thread object
      *
      * @return the Thread object

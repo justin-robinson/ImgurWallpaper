@@ -114,7 +114,8 @@ public class Writer {
 
 
             // ensure folder exists
-            if ( ! new File(outputDirectory).mkdir() ) {
+            File file = new File(outputDirectory);
+            if ( !file.exists() && !file.mkdir() ) {
                 GUI.getInstance().error("Error creating output directory : " + outputDirectory);
             }
 

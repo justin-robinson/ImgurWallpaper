@@ -103,16 +103,25 @@ public class GUI {
         JButton submit = new JButton("Submit");
         //button action
         submit.addActionListener((ActionEvent e) -> {
-            worker.stop();
+            if ( worker.isAlive() ) {
+                worker.stop();
+            }
             worker = new Worker();
             worker.start();
         });
 
         JButton pause = new JButton("Pause");
-        pause.addActionListener( e -> worker.suspend() );
-
-        JButton resume = new JButton("Resume");
-        resume.addActionListener( e -> worker.resume() );
+        pause.addActionListener( e -> {
+            if ( worker.isAlive() ) {
+                if ( worker.isSuspended() ) {
+                    worker.resume();
+                    pause.setText("Pause");
+                } else {
+                    worker.suspend();
+                    pause.setText("Resume");
+                }
+            }
+        } );
 
         // width & height input fields
         NumberFormat format = NumberFormat.getInstance();
@@ -157,7 +166,6 @@ public class GUI {
         top.add(inputPanel);
         top.add(submit);
         top.add(pause);
-        top.add(resume);
         top.add(downloadAllCheckBox);
         top.add(sizePanel);
         top.setBorder(BorderFactory.createCompoundBorder(
