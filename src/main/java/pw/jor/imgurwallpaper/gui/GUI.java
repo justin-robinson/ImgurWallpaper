@@ -19,11 +19,6 @@ import javax.swing.text.NumberFormatter;
 public class GUI {
 
     public JTextArea output;
-    public JTextField textField;
-    public ButtonGroup radios;
-    public JButton pause;
-    public JComboBox<?> comboBox;
-    public JCheckBox downloadAllCheckBox;
     public JFormattedTextField minWidth;
     public JFormattedTextField maxWidth;
     public JFormattedTextField minHeight;
@@ -73,9 +68,9 @@ public class GUI {
     private void show() {
 
         //text input for url
-        textField = new JTextField(40);
+        JTextField textField = new JTextField(40);
         //combobox
-        comboBox = new JComboBox<Object>(galleries);
+        JComboBox<Object> comboBox = new JComboBox<Object>(galleries);
         comboBox.setSelectedIndex(0);
         comboBox.setActionCommand(DEFINED_SELECTION);
         //panel for text and combobox
@@ -83,7 +78,7 @@ public class GUI {
         inputPanel.add(textField);
         inputPanel.add(comboBox);
         //Checkbox to download all files
-        downloadAllCheckBox = new JCheckBox("Download All");
+        JCheckBox downloadAllCheckBox = new JCheckBox("Download All");
 
         //radio buttons and panel to select input or combobox
         JRadioButton user = new JRadioButton();
@@ -92,7 +87,7 @@ public class GUI {
         JRadioButton defined = new JRadioButton();
         defined.setActionCommand(DEFINED_SELECTION);
 
-        radios = new ButtonGroup();
+        ButtonGroup radios = new ButtonGroup();
         radios.add(user);
         radios.add(defined);
         JPanel radioPanel = new JPanel(new GridLayout(0,1));
@@ -100,15 +95,13 @@ public class GUI {
         radioPanel.add(defined);
 
         //buttons for start, pause, resume
-        pause = new JButton("Pause");
+        JButton pause = new JButton("Pause/Resume");
         pause.addActionListener( e -> {
             if ( worker.isAlive() ) {
                 if ( worker.isSuspended() ) {
                     worker.resume();
-                    pause.setText("Pause");
                 } else {
                     worker.suspend();
-                    pause.setText("Resume");
                 }
             }
         } );
@@ -116,9 +109,7 @@ public class GUI {
         JButton submit = new JButton("GO");
         //button action
         submit.addActionListener((ActionEvent e) -> {
-            if ( worker != null && worker.isAlive() ) {
-                worker.stop();
-            }
+            stopWorker();
 
             String[] galleryIdentifiers;
 
@@ -209,9 +200,7 @@ public class GUI {
         // kill worker thread on application close
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(WindowEvent winEvt) {
-                if( worker.isAlive() ) {
-                    worker.stop();
-                }
+                stopWorker();
             }
         });
 
@@ -253,6 +242,12 @@ public class GUI {
                 message,
                 "Error",
                 JOptionPane.ERROR_MESSAGE);
+    }
+
+    private void stopWorker () {
+        if( worker != null && worker.isAlive() ) {
+            worker.stop();
+        }
     }
 
 }

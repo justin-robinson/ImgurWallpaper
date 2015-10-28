@@ -49,7 +49,7 @@ public class Worker extends SafeThread {
             // get Imgur gallery from identifier
             ImgurGallery gallery = new ImgurGallery(galleryIdentifier);
 
-            // get parser contents
+            // get content for parser to parse
             String body = Downloader.download(gallery.getUrl());
 
             // parse body for image hashes

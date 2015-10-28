@@ -3,7 +3,7 @@ package pw.jor.imgurwallpaper.parser;
 import java.util.ArrayList;
 
 /**
- * Abstract class for parsing image hashes from Imgur
+ * Interface for parsing image hashes from Imgur
  *
  * @author jrobinson
  * @since 10/22/15
