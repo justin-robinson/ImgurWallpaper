@@ -26,3 +26,6 @@ or
 ```
 ./gradlew run
 ```
+
+TODO
+1. Multi-threaded downloading
