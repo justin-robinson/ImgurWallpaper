@@ -1,7 +1,7 @@
-package pw.jor.imgurwallpaper.imgur;
+package pw.jor.imgurwallpaper.imgur.json;
 
 /**
- * Class to contain Imgur's hit json object
+ * Class to contain Imgur's hit HASH object
  *
  * @author jrobinson
  * @since 10/22/15

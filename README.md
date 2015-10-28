@@ -1,6 +1,6 @@
 ImgurWallpaper
 ==============
-Downloads wallpapers from imgur galleries in bulk.  Wallpapers are downloaded to a "walls" folder in your "My Pictures"
+Downloads wallpapers from imgur galleryIdentifiers in bulk.  Wallpapers are downloaded to a "walls" folder in your "My Pictures"
 folder.
 
 ProTip:  Check "Download all" and watch the magic.  You can do this everytime and it will only download new/missing wallpapers

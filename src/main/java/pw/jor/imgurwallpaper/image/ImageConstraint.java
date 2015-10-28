@@ -9,7 +9,7 @@ import pw.jor.imgurwallpaper.gui.GUI;
  * @author jrobinson
  * @since 10/23/15
  */
-public class Constraint {
+public class ImageConstraint {
 
     /**
      * Tests if image dimensions are in the user provided range

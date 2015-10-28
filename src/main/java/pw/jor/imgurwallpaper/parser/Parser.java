@@ -1,22 +1,33 @@
 package pw.jor.imgurwallpaper.parser;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
 /**
- * Abstract class for parsing image hashes from Imgur
- *
  * @author jrobinson
- * @since 10/22/15
+ * @since 10/28/15
  */
-public abstract class ParserAbstract {
+public class Parser {
 
     private ArrayList<String> ImageHashes;
+    private ParserInterface parserInterface;
 
     /**
      * Constructor
      */
-    public ParserAbstract ( ) {
+    public Parser( ParserInterface parserInterface ) {
         this.ImageHashes = new ArrayList<>();
+        this.parserInterface = parserInterface;
+    }
+
+    /**
+     * Parses body for image hashes using parser interface
+     *
+     * @param body what to parse
+     * @return image hashes found
+     */
+    public ArrayList<String> parse ( String body ) {
+        return parserInterface.parse(body);
     }
 
     /**
@@ -38,11 +49,4 @@ public abstract class ParserAbstract {
             ImageHashes.add(hash);
         }
     }
-
-    /**
-     * Abstract function to parse body for hashes
-     *
-     * @param body to be parsed for hashes
-     */
-    public abstract void parse ( String body );
 }

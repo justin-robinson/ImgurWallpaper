@@ -9,7 +9,7 @@ import java.io.File;
  * @author jrobinson
  * @since 10/26/15
  */
-public class Container {
+public class ImageContainer {
 
     private BufferedImage bufferedImage;
     private int imageNumber;
@@ -23,7 +23,7 @@ public class Container {
      * @param bufferedImage image to save
      * @param file where to save image
      */
-    public Container(BufferedImage bufferedImage, File file ) {
+    public ImageContainer(BufferedImage bufferedImage, File file) {
         this.bufferedImage = bufferedImage;
         this.file = file;
         this.imageNumber = ++imageNumberCounter;

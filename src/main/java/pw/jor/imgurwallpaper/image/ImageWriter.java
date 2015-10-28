@@ -16,17 +16,17 @@ import java.nio.file.Paths;
  * @author jrobinson
  * @since 10/20/15
  */
-public class Writer {
+public class ImageWriter {
 
     private static String outputDirectory = null;
     public static String FILE_FORMAT = "jpg";
 
-    private Tester<Container> tester;
+    private Tester<ImageContainer> tester;
 
     /**
      * Sets up tester to be used on all images
      */
-    public Writer () {
+    public ImageWriter() {
 
         tester = new Tester<>();
 
@@ -39,7 +39,7 @@ public class Writer {
 
         // is the image the right size?
         tester.addTest(new Test<>(
-                iC -> Constraint.isRightSize(
+                iC -> ImageConstraint.isRightSize(
                         iC.getBufferedImage().getWidth(),
                         iC.getBufferedImage().getHeight()),
                 iC -> {},
@@ -60,28 +60,28 @@ public class Writer {
         String fileName = hash + "." + FILE_FORMAT;
 
         // container for image content and save location
-        Container imageContainer = new Container(
+        ImageContainer imageImageContainer = new ImageContainer(
                 Downloader.getImage("http://i.imgur.com/" + fileName ),
                 new File(Paths.get(getOutputDirectory(), fileName).toString()));
 
         // write to file is all tests passed
-        if ( tester.test(imageContainer) ) {
+        if ( tester.test(imageImageContainer) ) {
 
             try {
 
                 // create file writer
-                FileOutputStream writer = new FileOutputStream(imageContainer.getFile().getPath());
+                FileOutputStream writer = new FileOutputStream(imageImageContainer.getFile().getPath());
 
-                GUI.getInstance().println(imageContainer.getOutputPrefix() + "DOWNLOADING");
+                GUI.getInstance().println(imageImageContainer.getOutputPrefix() + "DOWNLOADING");
 
                 // attempt to write file
                 try {
                     ImageIO.write(
-                            imageContainer.getBufferedImage(),
+                            imageImageContainer.getBufferedImage(),
                             FILE_FORMAT,
-                            imageContainer.getFile());
+                            imageImageContainer.getFile());
                 } catch (IOException e) {
-                    GUI.getInstance().println("Error reading or writing image: " + imageContainer.getFile().getName());
+                    GUI.getInstance().println("Error reading or writing image: " + imageImageContainer.getFile().getName());
                     GUI.getInstance().println(e.getMessage());
                 }
 

@@ -1,46 +1,42 @@
 package pw.jor.imgurwallpaper.parser;
 
 import com.google.gson.Gson;
-import pw.jor.imgurwallpaper.image.Constraint;
-import pw.jor.imgurwallpaper.imgur.Hit;
-import pw.jor.imgurwallpaper.imgur.Image;
+import pw.jor.imgurwallpaper.image.ImageConstraint;
+import pw.jor.imgurwallpaper.imgur.json.Hit;
+import pw.jor.imgurwallpaper.imgur.json.Image;
+
+import java.util.ArrayList;
 
 /**
- * Finds image hashes in Imgur's json object
+ * Finds image hashes in Imgur's HASH object
  *
  * @author jrobinson
  * @since 10/22/15
  */
-public class JSONParser extends ParserAbstract {
+public class JSONParser implements ParserInterface {
 
-    public static Gson gson;
-
-    /**
-     * Constructor
-     */
-    public JSONParser () {
-        super();
-
-        // initialize google's json parser
-        gson = new Gson();
-    }
+    public Gson gson = new Gson();
 
     /**
      * Search json for image hashes
      *
-     * @param body json string
+     * @param json Imgur hit object
      */
-    public void parse ( String body ) {
+    public ArrayList<String> parse ( String json ) {
 
-        // parse json into object
-        Hit hit = gson.fromJson(body, Hit.class);
+        ArrayList<String> imageHashes = new ArrayList<>();
+
+        // parse HASH into object
+        Hit hit = gson.fromJson(json, Hit.class);
 
         // add all correctly sized images to the hash
         for ( Image image : hit.getImages() ) {
-            if ( Constraint.isRightSize(image.width, image.height) ) {
-                addHash(image.hash);
+            if ( ImageConstraint.isRightSize(image.width, image.height) ) {
+                imageHashes.add(image.hash);
             }
         }
+
+        return imageHashes;
 
     }
 }

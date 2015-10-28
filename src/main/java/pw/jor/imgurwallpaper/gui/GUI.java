@@ -20,7 +20,6 @@ public class GUI {
 
     public JTextArea output;
     public JTextField textField;
-    public String selection;
     public ButtonGroup radios;
     public JButton pause;
     public JComboBox<?> comboBox;
@@ -37,7 +36,7 @@ public class GUI {
     public static final String DEFINED_SELECTION = "defined";
 
     private static GUI instance = new GUI();
-    private Worker worker = new Worker();
+    private Worker worker;
 
     /**
      * Gets the singleton
@@ -117,12 +116,31 @@ public class GUI {
         JButton submit = new JButton("GO");
         //button action
         submit.addActionListener((ActionEvent e) -> {
-            if ( worker.isAlive() ) {
+            if ( worker != null && worker.isAlive() ) {
                 worker.stop();
             }
-            worker = new Worker();
+
+            String[] galleryIdentifiers;
+
+            // download all urls checked?
+            if( downloadAllCheckBox.isSelected() ) {
+                galleryIdentifiers = galleries;
+            }
+            // user input url?
+            else if( radios.getSelection().getActionCommand().equals(GUI.USER_SELECTION) ) {
+                galleryIdentifiers = new String[]{textField.getText()};
+            }
+            // pre-populated url?
+            else if ( radios.getSelection().getActionCommand().equals(GUI.DEFINED_SELECTION) ) {
+                galleryIdentifiers = new String[]{galleries[comboBox.getSelectedIndex()]};
+            }
+            // this should never happen
+            else {
+                galleryIdentifiers = new String[0];
+            }
+
+            worker = new Worker(galleryIdentifiers);
             worker.start();
-            pause.setVisible(true);
         });
 
 

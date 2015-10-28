@@ -6,6 +6,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 /**
  * Parses the Imgur DOM for hashes
@@ -13,14 +14,16 @@ import java.nio.file.Paths;
  * @author jrobinson
  * @since 10/22/15
  */
-public class HTMLParser extends ParserAbstract {
+public class HTMLParser implements ParserInterface {
 
     /**
      * Parses Imgur DOM for hashes
      *
-     * @param body html DOM
+     * @param body URL DOM
      */
-    public void parse ( String body ) {
+    public ArrayList<String> parse ( String body ) {
+
+        ArrayList<String> imageHashes = new ArrayList<>();
 
         // import body into DOM parser
         Document document = Jsoup.parse(body);
@@ -33,8 +36,10 @@ public class HTMLParser extends ParserAbstract {
             String imageURL = img.attr("href");
             String hash = Paths.get(imageURL).getFileName().toString();
 
-            addHash(hash);
+            imageHashes.add(hash);
         }
+
+        return imageHashes;
 
     }
 }
