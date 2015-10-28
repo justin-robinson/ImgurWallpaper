@@ -39,11 +39,12 @@ public class Writer {
 
         // is the image the right size?
         tester.addTest(new Test<>(
-                iC -> !Constraint.isRightSize(
+                iC -> Constraint.isRightSize(
                         iC.getBufferedImage().getWidth(),
                         iC.getBufferedImage().getHeight()),
                 iC -> {},
-                iC -> GUI.getInstance().println(iC.getOutputPrefix() + "is not the right size")
+                iC -> GUI.getInstance().println(iC.getOutputPrefix() + "is not the right size (" +
+                        iC.getBufferedImage().getWidth() + " x " + iC.getBufferedImage().getHeight() + ")")
         ));
 
     }
