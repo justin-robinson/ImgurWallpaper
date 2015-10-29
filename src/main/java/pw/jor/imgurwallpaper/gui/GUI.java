@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.text.NumberFormat;
+import java.util.function.Function;
 
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;
@@ -29,6 +30,8 @@ public class GUI {
 
     public static final String USER_SELECTION = "user";
     public static final String DEFINED_SELECTION = "defined";
+    public static final String PAUSE = "Pause";
+    public static final String RESUME = "Resume";
 
     private static GUI instance = new GUI();
     private Worker worker;
@@ -70,7 +73,7 @@ public class GUI {
         //text input for url
         JTextField textField = new JTextField(40);
         //combobox
-        JComboBox<Object> comboBox = new JComboBox<Object>(galleries);
+        JComboBox<Object> comboBox = new JComboBox<>(galleries);
         comboBox.setSelectedIndex(0);
         comboBox.setActionCommand(DEFINED_SELECTION);
         //panel for text and combobox
@@ -95,16 +98,19 @@ public class GUI {
         radioPanel.add(defined);
 
         //buttons for start, pause, resume
-        JButton pause = new JButton("Pause/Resume");
-        pause.addActionListener( e -> {
-            if ( worker.isAlive() ) {
-                if ( worker.isSuspended() ) {
+        JButton pauseAndResumeButton = new JButton(PAUSE);
+        pauseAndResumeButton.setVisible(false);
+        pauseAndResumeButton.addActionListener(e -> {
+            if (worker.isAlive()) {
+                if (worker.isSuspended()) {
                     worker.resume();
+                    pauseAndResumeButton.setText(PAUSE);
                 } else {
                     worker.suspend();
+                    pauseAndResumeButton.setText(RESUME);
                 }
             }
-        } );
+        });
 
         JButton submit = new JButton("GO");
         //button action
@@ -131,6 +137,16 @@ public class GUI {
             }
 
             worker = new Worker(galleryIdentifiers);
+            worker.onFinish(
+                    w -> {
+                        println("Done!");
+                        pauseAndResumeButton.setVisible(false);
+
+                        return this;
+                    }
+            );
+            pauseAndResumeButton.setText(PAUSE);
+            pauseAndResumeButton.setVisible(true);
             worker.start();
         });
 
@@ -178,7 +194,7 @@ public class GUI {
         top.add(inputPanel);
         top.add(downloadAllCheckBox);
         top.add(submit);
-        top.add(pause);
+        top.add(pauseAndResumeButton);
         top.add(sizePanel);
         top.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createTitledBorder("Enter the imgur gallery url"),

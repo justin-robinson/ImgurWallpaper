@@ -8,6 +8,7 @@ import pw.jor.imgurwallpaper.parser.*;
 import pw.jor.imgurwallpaper.image.ImageWriter;
 
 import java.util.ArrayList;
+import java.util.function.Function;
 
 
 /**
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 public class Worker extends SafeThread {
 
     private String[] galleryIdentifiers;
+    private Function<Object, Object> onFinishFunction;
 
     /**
      * Constructor
@@ -75,7 +77,13 @@ public class Worker extends SafeThread {
             }
         }
 
-        GUI.getInstance().println("Done");
+        if ( onFinishFunction != null ) {
+            onFinishFunction.apply(this);
+        }
 
+    }
+
+    public void onFinish ( Function<Object, Object> function ) {
+        onFinishFunction = function;
     }
 }
