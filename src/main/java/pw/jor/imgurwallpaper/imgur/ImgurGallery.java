@@ -1,7 +1,5 @@
 package pw.jor.imgurwallpaper.imgur;
 
-import java.net.MalformedURLException;
-
 /**
  * @author jrobinson
  * @since 10/28/15

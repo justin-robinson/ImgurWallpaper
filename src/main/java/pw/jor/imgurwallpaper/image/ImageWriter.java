@@ -19,7 +19,7 @@ import java.nio.file.Paths;
 public class ImageWriter {
 
     private static String outputDirectory = null;
-    public static String FILE_FORMAT = "jpg";
+    public static final String FILE_FORMAT = "jpg";
 
     private Tester<ImageContainer> tester;
 
