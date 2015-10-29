@@ -6,7 +6,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.text.NumberFormat;
-import java.util.function.Function;
 
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;
@@ -34,7 +33,7 @@ public class GUI {
     public static final String RESUME = "Resume";
 
     private static GUI instance = new GUI();
-    private Worker worker;
+    private GUIWorker guiWorker;
 
     /**
      * Gets the singleton
@@ -101,12 +100,12 @@ public class GUI {
         JButton pauseAndResumeButton = new JButton(PAUSE);
         pauseAndResumeButton.setVisible(false);
         pauseAndResumeButton.addActionListener(e -> {
-            if (worker.isAlive()) {
-                if (worker.isSuspended()) {
-                    worker.resume();
+            if (guiWorker.isAlive()) {
+                if (guiWorker.isSuspended()) {
+                    guiWorker.resume();
                     pauseAndResumeButton.setText(PAUSE);
                 } else {
-                    worker.suspend();
+                    guiWorker.suspend();
                     pauseAndResumeButton.setText(RESUME);
                 }
             }
@@ -136,8 +135,8 @@ public class GUI {
                 galleryIdentifiers = new String[0];
             }
 
-            worker = new Worker(galleryIdentifiers);
-            worker.onFinish(
+            guiWorker = new GUIWorker(galleryIdentifiers);
+            guiWorker.onFinish(
                     w -> {
                         println("Done!");
                         pauseAndResumeButton.setVisible(false);
@@ -147,7 +146,7 @@ public class GUI {
             );
             pauseAndResumeButton.setText(PAUSE);
             pauseAndResumeButton.setVisible(true);
-            worker.start();
+            guiWorker.start();
         });
 
 
@@ -260,9 +259,12 @@ public class GUI {
                 JOptionPane.ERROR_MESSAGE);
     }
 
+    /**
+     * Stops the worker thread
+     */
     private void stopWorker () {
-        if( worker != null && worker.isAlive() ) {
-            worker.stop();
+        if( guiWorker != null && guiWorker.isAlive() ) {
+            guiWorker.stop();
         }
     }
 

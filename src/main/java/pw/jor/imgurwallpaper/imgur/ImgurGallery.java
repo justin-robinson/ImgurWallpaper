@@ -49,10 +49,17 @@ public class ImgurGallery {
 
         String url = "";
 
-        if ( getGalleryType() == GalleryType.HASH  ) {
-            url = "http://imgur.com/ajaxalbums/getimages/" + galleryIdentifier + "/hit.HASH?all=true";
-        } else if ( getGalleryType() == GalleryType.URL ) {
-            url = galleryIdentifier + "/new/page/1/hit?scrolled";
+        switch ( getGalleryType() ) {
+            case HASH :
+                url = "http://imgur.com/ajaxalbums/getimages/" + galleryIdentifier + "/hit.HASH?all=true";
+                break;
+            case URL :
+                url = galleryIdentifier + "/new/page/1/hit?scrolled";
+                break;
+            default:
+                url = galleryIdentifier;
+                break;
+
         }
 
         return url;

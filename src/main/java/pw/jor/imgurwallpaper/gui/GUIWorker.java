@@ -17,7 +17,7 @@ import java.util.function.Function;
  * @author jrobinson
  * @since 10/20/15
  */
-public class Worker extends SafeThread {
+public class GUIWorker extends SafeThread {
 
     private String[] galleryIdentifiers;
     private Function<Object, Object> onFinishFunction;
@@ -26,7 +26,7 @@ public class Worker extends SafeThread {
      * Constructor
      * @param galleryIdentifiers galleryIdentifiers to download
      */
-    public Worker ( String[] galleryIdentifiers) {
+    public GUIWorker(String[] galleryIdentifiers) {
         this.galleryIdentifiers = galleryIdentifiers;
     }
 
@@ -55,7 +55,7 @@ public class Worker extends SafeThread {
             String body = Downloader.download(gallery.getUrl());
 
             // parse body for image hashes
-            Parser parser = ParserFactory.factory(gallery.getGalleryType().toString());
+            Parser parser = ParserFactory.factory(gallery.getGalleryType());
             ArrayList<String> imageHashes = parser.parse(body);
 
             // resets counter for image number back to 1

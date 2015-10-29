@@ -29,3 +29,4 @@ or
 
 ####TODO
 1. Multi-threaded downloading
+2. Duplicate image detection
