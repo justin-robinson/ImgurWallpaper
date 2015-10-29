@@ -25,7 +25,7 @@ public class GUI {
     public JFormattedTextField maxHeight;
     public JFrame frame;
 
-    public static String[] galleries;
+    public static String[] galleryIdentifiers;
 
     public static final String USER_SELECTION = "user";
     public static final String DEFINED_SELECTION = "defined";
@@ -53,8 +53,8 @@ public class GUI {
         frame = new JFrame();
 
         try {
-            // get the prepopulated sources for wallpapers
-            galleries = Downloader.getSourceURLs();
+            // get the pre-populated sources for wallpapers
+            galleryIdentifiers = Downloader.getGalleryIdentifiers();
 
             // show the gui
             this.show();
@@ -72,7 +72,7 @@ public class GUI {
         //text input for url
         JTextField textField = new JTextField(40);
         //combobox
-        JComboBox<Object> comboBox = new JComboBox<>(galleries);
+        JComboBox<Object> comboBox = new JComboBox<>(galleryIdentifiers);
         comboBox.setSelectedIndex(0);
         comboBox.setActionCommand(DEFINED_SELECTION);
         //panel for text and combobox
@@ -120,7 +120,7 @@ public class GUI {
 
             // download all urls checked?
             if( downloadAllCheckBox.isSelected() ) {
-                galleryIdentifiers = galleries;
+                galleryIdentifiers = GUI.galleryIdentifiers;
             }
             // user input url?
             else if( radios.getSelection().getActionCommand().equals(GUI.USER_SELECTION) ) {
@@ -128,7 +128,7 @@ public class GUI {
             }
             // pre-populated url?
             else if ( radios.getSelection().getActionCommand().equals(GUI.DEFINED_SELECTION) ) {
-                galleryIdentifiers = new String[]{galleries[comboBox.getSelectedIndex()]};
+                galleryIdentifiers = new String[]{GUI.galleryIdentifiers[comboBox.getSelectedIndex()]};
             }
             // this should never happen
             else {

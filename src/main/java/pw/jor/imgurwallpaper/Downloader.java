@@ -91,25 +91,25 @@ public class Downloader {
      *
      * @return list of default urls and gallery hashes available to download
      */
-    public static String[] getSourceURLs () {
+    public static String[] getGalleryIdentifiers () {
 
         // where we will store the urls and gallery hashes
-        ArrayList<String> galleriesList = new ArrayList<>();
+        ArrayList<String> galleryIdentifiers = new ArrayList<>();
 
         // download page
         String page = download(DOWNLOAD_LIST_URL);
 
-        //Extract individual galleries
+        //Extract individual galleryIdentifiers
         Scanner pageScanner = new Scanner(page);
         while( pageScanner.hasNext() ){
-            galleriesList.add(pageScanner.nextLine().trim());
+            galleryIdentifiers.add(pageScanner.nextLine().trim());
         }
 
-        // close streams and scanners
+        // close scanner
         pageScanner.close();
 
         // convert array list to array
-        return galleriesList.toArray(new String[galleriesList.size()]);
+        return galleryIdentifiers.toArray(new String[galleryIdentifiers.size()]);
 
     }
 }
