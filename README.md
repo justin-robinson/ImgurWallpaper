@@ -3,9 +3,12 @@ ImgurWallpaper
 Downloads wallpapers from imgur galleryIdentifiers in bulk.  Wallpapers are downloaded to a "walls" folder in your "My Pictures"
 folder.
 
+###Download
+Auto-built from source [https://jor.pw/downloads/ImgurWallpaper.jar](https://jor.pw/downloads/ImgurWallpaper.jar)
+
 ProTip:  Check "Download all" and watch the magic.  You can do this everytime and it will only download new/missing wallpapers
 
-##Run
+##Build
 
 ###Windows
 ```
