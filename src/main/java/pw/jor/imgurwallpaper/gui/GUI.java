@@ -111,7 +111,7 @@ public class GUI {
             }
         });
 
-        JButton submit = new JButton("GO AUOT2");
+        JButton submit = new JButton("GO");
         //button action
         submit.addActionListener((ActionEvent e) -> {
             stopWorker();
