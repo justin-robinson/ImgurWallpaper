@@ -111,7 +111,7 @@ public class GUI {
             }
         });
 
-        JButton submit = new JButton("GO Tara we beat the last of us");
+        JButton submit = new JButton("GO");
         //button action
         submit.addActionListener((ActionEvent e) -> {
             stopWorker();
