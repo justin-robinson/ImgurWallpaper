@@ -1,6 +1,9 @@
 package pw.jor.imgurwallpaper;
 
+import com.google.gson.Gson;
+
 import pw.jor.imgurwallpaper.gui.GUI;
+import pw.jor.json.ImgurWallpaperHashContainer;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -20,7 +23,7 @@ import java.net.URL;
  */
 public class Downloader {
 
-    private static final String DOWNLOAD_LIST_URL = "http://jor.pw/downloads/walls.txt";
+    private static final String DOWNLOAD_LIST_URL = "http://jor.pw/imgur-hashes/";
 
     /**
      * Gets the contents of a url
@@ -97,19 +100,13 @@ public class Downloader {
         ArrayList<String> galleryIdentifiers = new ArrayList<>();
 
         // download page
-        String page = download(DOWNLOAD_LIST_URL);
+        String json = download(DOWNLOAD_LIST_URL);
 
-        //Extract individual galleryIdentifiers
-        Scanner pageScanner = new Scanner(page);
-        while( pageScanner.hasNext() ){
-            galleryIdentifiers.add(pageScanner.nextLine().trim());
-        }
-
-        // close scanner
-        pageScanner.close();
+        Gson gson = new Gson();
+        ImgurWallpaperHashContainer hashContainer = gson.fromJson(json, ImgurWallpaperHashContainer.class);
 
         // convert array list to array
-        return galleryIdentifiers.toArray(new String[galleryIdentifiers.size()]);
+        return hashContainer.hashes;
 
     }
 }
